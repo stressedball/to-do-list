@@ -1,0 +1,122 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    height: 100%;
+    width: 100%;
+}
+
+img {
+    width: 25px;
+    height: auto;
+    opacity: 0.4;
+}
+
+img:hover {
+    opacity: 1;
+}
+
+img.priority:hover {
+    filter: invert(23%) sepia(51%) saturate(4539%) hue-rotate(342deg) brightness(91%) contrast(95%);
+}
+
+img.important {
+    filter: invert(23%) sepia(51%) saturate(4539%) hue-rotate(342deg) brightness(91%) contrast(95%);
+}
+
+.main {
+    width: 100%;
+}
+
+.main-button {
+    filter: invert(23%) sepia(51%) saturate(4539%) hue-rotate(342deg) brightness(91%) contrast(95%);
+    padding: 30px;
+}
+
+.projects-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.projects-container .project-tile {
+    margin-left: 20px;
+}
+
+.projects-container .project-tile:hover {
+    color: wheat;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.tasks-container {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(255, 255, 255, 0.6);
+    gap: 20px;
+    align-items: center;
+    padding: 30px;
+}
+
+.task-tile {
+    display: flex;  
+    flex-direction: row;
+    align-items: center;
+    /* gap: 20px; */
+    width: 80%;
+    background-color: rgb(255, 255, 255, 0.2);
+    border: 1px solid white;
+    justify-content: space-between;
+    padding: 20px;
+    color: black;
+}
+
+.task-tile:hover {
+    background-color: rgb(255, 255, 255, 0.4);
+}
+
+.task-tile .title {
+    width: 200px;
+}
+
+.task-options {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.sidebar {
+    background-color: rgb(255, 255, 255, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    padding: 30px;
+}
+
+#structure {
+    background-color: black;
+    color: white;
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+.upper-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    /* font-size: 1.2em; */
+}
+
+.upper-menu h3:hover {
+    color: wheat;
+    cursor: pointer;
+    text-decoration: underline;
+}

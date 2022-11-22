@@ -1,0 +1,29 @@
+{
+  "name": "to-do-list-rebuild",
+  "version": "1.0.0",
+  "description": "Rebuild To Do List project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "webpack --watch",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stressedball/to-do-list-rebuild.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stressedball/to-do-list-rebuild/issues"
+  },
+  "homepage": "https://github.com/stressedball/to-do-list-rebuild#readme",
+  "devDependencies": {
+    "css-loader": "^6.7.2",
+    "date-fns": "^2.29.3",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.0"
+  }
+}

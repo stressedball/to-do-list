@@ -7,7 +7,7 @@ function libraryManager() {
 
     const push = (object) => {
         library.push(object);
-        object.index = library.indexOf(object);
+        reIndex();
     };
 
     const getLibrary = () => {
@@ -24,8 +24,7 @@ function libraryManager() {
         return filter;
     }
 
-    const filterProjects = (arg) => {
-        const index = arg.dataset.index;
+    const filterProjects = (index) => {
         const projectName = library[index].title;
         const allTasks = library.filter(el => el.type === 'task');
         const filter = allTasks.filter(el => el.append === `${projectName}`);
@@ -67,8 +66,46 @@ function libraryManager() {
         return localLibrary;
     }
 
+    const updatePriority = (index) => {
+        const task = library[index];
+        if (task.priority === 'important') {
+            task.priority = '';
+        } else {
+            task.priority = 'important';
+        }
+    }
+
+    const updateObject = (index, object) => {
+        const task = library[index];
+        task.title = object.title;
+        task.description = object.description;
+        task.dueDate = object.dueDate;
+        const priority = object.priority;
+        const prioritySplit = priority.split(' ');
+        for (let split of prioritySplit) {
+            if (split === 'important') {
+                task.priority = 'important';
+            } else {
+                task.priority = '';
+            }
+        }
+        // task.priority = taskPriority();
+    }
+
+    const remove = (index) => {
+        library = library.filter(el => el.index !== Number(index));
+        reIndex();
+    }
+
     return { push, getLibrary, filterProjects, filterImportant,
-        filterWeek, getProjects, getTasks };
+        filterWeek, getProjects, getTasks, remove, updateObject, updatePriority };
+}
+
+function reIndex() {
+
+    for (let object of library) {
+        object.index = library.indexOf(object);
+    }
 }
 
 export {libraryManager};

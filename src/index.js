@@ -5,7 +5,7 @@ import {makeElement} from './modules/make-element';
 import {dummyDisplay} from './modules/dummy';
 import {libraryManager} from './modules/library-manager';
 import { populateData } from './modules/populateData';
-
+import { formManager } from './modules/forms-manager';
 
 window.addEventListener('load', loadStructure);
 
@@ -24,9 +24,11 @@ function loadStructure() {
 
     //MAIN BODY
     const formContainer = makeElement('div', 'forms', '.main'); 
-    const startButton = makeElement('img', 'main-button', '.forms');
-    startButton.setAttribute('src', '/src/assets/icons/add-plus-svgrepo-com.svg')
-    //SHOULD CONTAIN FORMS TO GET INPUTS FOR NEW TASKS / PROJECTS
+
+    //CREATE TASK OR PROJECT
+    formManager(); //HERE FOR ADD TASK/ADD PROJECT EVENT LISTENERS
+
+    //CONTAINER TO DISPLAY SELECTED TASKS
     const tasksContainer = makeElement('div', 'tasks-container', '.main'); 
 
     const allTasks = makeElement('h3', 'all-tasks', '.upper-menu'); //ALL TASKS
@@ -38,34 +40,30 @@ function loadStructure() {
     important.textContent = 'Important tasks';
  
     dummyDisplay(); //GET EXAMPLES TO DISPLAY ON PAGE
-
-    //DISPLAY PROJECTS SHORTCUTS
-    const projects = libraryManager().getProjects();
-    populateData(projects);
-    const projectsElements = document.querySelectorAll('.project-tile');
-
+    
     ///////EVENT LISTENER FOR EVERY PROJECT / MAIN CATEGORY///////////////////////////
     ///////FUNCTION POPULATES MAIN CONTAINER WITH APPROPRIATE/////////////////////////
     ///////RETURN VALUES FROM libraryManager/////////////////////////////////////////
-    for (let project of projectsElements) {
-        project.addEventListener('click', () => {
-            populateData(libraryManager().filterProjects(project));
-        });
-    }
+
 
     allTasks.addEventListener('click', () => {
-        populateData(libraryManager().getTasks());
+        document.querySelector('.main').setAttribute('data-handle', 'all-tasks')
+        populateData();
     });
 
     weekTasks.addEventListener('click', () => {
-        populateData(libraryManager().filterWeek());
+        document.querySelector('.main').setAttribute('data-handle', 'week-tasks')
+        populateData();
     });
 
     important.addEventListener('click', () => {
-        populateData(libraryManager().filterImportant());
+        document.querySelector('.main').setAttribute('data-handle', 'important')
+        populateData();
     });
 
+
     document.querySelector('.important').click(); //why not
+    //gets tasks container to display important tasks
 }
 
 

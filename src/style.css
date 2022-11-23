@@ -1,6 +1,14 @@
 * {
     margin: 0;
     padding: 0;
+    overflow: hidden;
+}
+
+:root {
+    --main-color: rgb(255, 255, 255, 0.4);
+    --black-one: 255;
+    --black-two: 255;
+    --black-three: 255;
 }
 
 html {
@@ -11,7 +19,113 @@ html {
 body {
     height: 100%;
     width: 100%;
+    background-color: black;
 }
+
+.append-task {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+    justify-content: start;
+}
+
+.cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(8, 25, 29, 0.911);
+}
+
+.expand {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center ; */
+    /* align-items: center; */
+    gap: 20px;
+    border: 1px solid white;
+    padding: 30px;
+    background-color: rgb(255, 255, 255, 0.2);
+}
+
+.expand .close {
+    /* height: 50px; */
+    /* width: 90px; */
+    /* font-size: 1.2rem; */
+    padding: 20px;
+    color: azure;
+    border: 1px solid white;
+    background-color: rgba(124, 124, 124, 0.678);
+    display: flex;
+    align-self: center;
+    align-items: center;
+}
+
+.expand .close:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    /* font-size: 1.1rem; */
+}
+
+.expand > div {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid white;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.expand div.edit-buttons {
+    padding: 0;
+    gap: 0;
+    text-align: center;
+}
+
+.edit-buttons div {
+    padding: 10px;
+    width: 100%;
+}
+
+.edit-buttons div:hover {
+    background-color: rgb(46, 68, 94);
+    color: white;
+}
+
+.first-choice-container {
+    background-color: rgba(0, 0, 0, 0.16);
+    width: 250px;
+    height: 80px;
+    color: white;
+}
+
+.first-choice-container:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: (255, 255, 255, 0.1);
+}
+
+.first-choice-container div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}
+
+.forms {
+    display: flex;
+    justify-content: space-around;
+    align-items: center ;
+    height: 150px;
+    width: 100%;
+    /* gap: 50px; */
+}
+
 
 img {
     width: 25px;
@@ -29,15 +143,36 @@ img.priority:hover {
 
 img.important {
     filter: invert(23%) sepia(51%) saturate(4539%) hue-rotate(342deg) brightness(91%) contrast(95%);
+    opacity: 1  ;
+}
+
+input {
+    outline: none;
+    border: none;
+}
+
+input.title {
+    width: 200px;
+    /* height: 20px; */
 }
 
 .main {
     width: 100%;
+    background-color: rgb(255, 255, 255, 0.3);
 }
 
 .main-button {
     filter: invert(23%) sepia(51%) saturate(4539%) hue-rotate(342deg) brightness(91%) contrast(95%);
     padding: 30px;
+    width: 50px;
+    /* background-color: bisque; */
+    margin-left: 50px;
+}
+
+.make-choice {
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
 }
 
 .projects-container {
@@ -56,13 +191,56 @@ img.important {
     text-decoration: underline;
 }
 
+
 .tasks-container {
     display: flex;
     flex-direction: column;
-    background-color: rgb(255, 255, 255, 0.6);
+    background-color: rgb(255, 255, 255, 0.4);
     gap: 20px;
     align-items: center;
     padding: 30px;
+}
+
+.task-form {
+    background-color: rgb(255, 255, 255, 0.2);
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.task-form .append-container {
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    gap: 5px;
+    align-items: flex-start;
+}
+
+.task-form > div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.task-form .head-container {
+    display: flex;
+    flex-direction: column;
+}
+.task-form .head-container .title {
+    width: 280px;
+    /* height: 25px; */
+    box-shadow: inset 0 -1px black;
+    padding: 10px;
+}
+
+.task-form .head-container .description {
+    width: 280px;
+    height: 100px;
+    padding: 10px;
+
 }
 
 .task-tile {
@@ -92,20 +270,32 @@ img.important {
     gap: 10px;
 }
 
+textarea {
+    resize: none;
+    border: none;
+    outline: none;
+}
+
 .sidebar {
-    background-color: rgb(255, 255, 255, 0.4);
+    /* background-color: rgb(255, 255, 255, 0.4); */
     display: flex;
     flex-direction: column;
     gap: 50px;
     padding: 30px;
+    background-color: rgb(255, 255, 255, 0.4);
 }
 
 #structure {
-    background-color: black;
+    background-color: rgb(255, 255, 255, 0.2);
     color: white;
     display: flex;
     height: 100vh;
     width: 100vw;
+}
+
+.underlined {
+    text-decoration: underline;
+    color: black;
 }
 
 .upper-menu {
@@ -119,4 +309,9 @@ img.important {
     color: wheat;
     cursor: pointer;
     text-decoration: underline;
+}
+
+.view-only {
+    pointer-events: none;
+    opacity: 1;
 }

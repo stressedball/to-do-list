@@ -1,4 +1,6 @@
-import { libraryManager } from "./library-manager";
+'use strict';
+
+import { libraryManager, storage } from "./library-manager";
 import { makeElement } from "./make-element";
 import { populateData } from "./populateData";
 import { removeElement } from "./remove-element";
@@ -22,7 +24,7 @@ function clickManager() {
     for (let expand of expandButtons) {
         expand.addEventListener('click', (e) => {
             const taskIndex = e.target.parentElement.parentElement.dataset.index;
-            const task = libraryManager().getLibrary()[taskIndex];
+            const task = storage().getLibrary()[taskIndex];
             expandTask(task, 'div');
         });
     }
@@ -30,7 +32,7 @@ function clickManager() {
     for (let edit of editButtons) {
         edit.addEventListener('click', (e) => {
             const taskIndex = e.target.parentElement.parentElement.dataset.index;
-            const task = libraryManager().getLibrary()[taskIndex];
+            const task = storage().getLibrary()[taskIndex];
             expandTask(task, 'input');
         });
     }
@@ -38,9 +40,8 @@ function clickManager() {
     for (let remove of removeButtons) {
         remove.addEventListener('click', (e) => {
             const index = e.target.parentElement.parentElement.dataset.index;
-            const taskTile = e.target.parentElement.parentElement;
-            libraryManager().remove(index);
             removeElement(`.task-tile[data-index = "${index}"]`);
+            storage().remove(index);
         });
     }
     
@@ -128,7 +129,7 @@ function priorityUpdate(e) {
         taskIndex = document.querySelector('.cover .expand').dataset.index;
     }
 
-    const libraryTask = libraryManager().getLibrary()[taskIndex];
+    const libraryTask = storage().getLibrary()[taskIndex];
 
     if (e.target.classList.contains('important')) {
         e.target.classList.remove('important');

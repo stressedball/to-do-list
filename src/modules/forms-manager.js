@@ -1,10 +1,11 @@
+'use strict';
+
 import { makeElement } from "./make-element";
 import { removeElement } from "./remove-element";
-import {libraryManager} from './library-manager';
+import {libraryManager, storage} from './library-manager';
 import { populateData } from "./populateData";
 
-function formManager() {
-    
+function formManager() { 
     makeElement('div', 'make-choice', '.forms');
     makeElement('div', 'first-choice-container', '.make-choice')
     const createTask = makeElement('div', 'task-choice', '.first-choice-container');
@@ -19,7 +20,6 @@ function formManager() {
 }
 
 function taskForm() {
-
     makeElement('div', 'cover', '.main');
     makeElement('div', 'task-form', '.cover');
     makeElement('div', 'head-container', '.task-form')
@@ -57,7 +57,7 @@ function taskForm() {
     makeElement('select', 'select', '.project-link-container');
     makeElement('option', 'default', '.project-link-container select');
 
-    const libraryProjects = libraryManager().getProjects();
+    const libraryProjects = storage().getProjects();
     for (let project of libraryProjects) {
         const option = makeElement('option', 'option', '.project-link-container select');
         option.setAttribute('value', `${project.title}`);
@@ -71,54 +71,8 @@ function taskForm() {
 
     const cancelButton = makeElement('div', 'cancel', '.task-form .choice-container');
     cancelButton.textContent = 'Cancel';
-
-    confirmButton.addEventListener('click', getTask);
-    cancelButton.addEventListener('click', () => {
-        removeElement('.cover');
-    });
-
+    eventController('task')
 }
-
-function projectForm() {
-    makeElement('div', 'cover', '.main');
-    makeElement('div', 'task-form', '.cover');
-    makeElement('div', 'head-container', '.task-form')
-    const titleInput = makeElement('input', 'title', '.task-form .head-container');
-    titleInput.setAttribute('type', 'text');
-    titleInput.setAttribute('placeholder', 'Title...');
-
-    const descriptionInput = makeElement('textarea', 'description', '.task-form .head-container');
-    descriptionInput.setAttribute('placeholder', 'Add a description (optional).');
-
-    const tasksContainer = makeElement('div', 'append-container', '.task-form');
-
-    const library = libraryManager().getTasks();
-    const libraryFilter = library.filter(el => el.append === '');
-    for (let task of libraryFilter) {
-        const tile = makeElement('div', 'append-task', '.append-container');
-        tile.setAttribute('data-index', `${task.index}`);
-        const check = makeElement('input', 'to-append', `.append-task[data-index = '${task.index}']`);
-        check.setAttribute('type', 'checkbox');
-        const title = makeElement('div', 'title', `.append-task[data-index = '${task.index}']`);
-        title.textContent = task.title;
-    }
-
-    makeElement('div', 'choice-container', '.task-form');
-
-    const confirmButton = makeElement('div', 'confirm', '.task-form .choice-container');
-    confirmButton.textContent = 'Confirm';
-
-    const cancelButton = makeElement('div', 'cancel', '.task-form .choice-container');
-    cancelButton.textContent = 'Cancel';
-
-    confirmButton.addEventListener('click', getTask);
-    cancelButton.addEventListener('click', () => {
-        removeElement('.cover');
-    });
-
-
-}
-
 
 function getTask() {
     const title = document.querySelector('.head-container .title').value;
@@ -138,9 +92,78 @@ function getTask() {
         type: 'task', title, description, priority, dueDate, append
     }
 
-    libraryManager().push(object);
+    storage().push(object);
     removeElement('.cover');
     populateData();
+}
+
+function projectForm() {
+    makeElement('div', 'cover', '.main');
+    makeElement('div', 'task-form', '.cover');
+    makeElement('div', 'head-container', '.task-form')
+    const titleInput = makeElement('input', 'title', '.task-form .head-container');
+    titleInput.setAttribute('type', 'text');
+    titleInput.setAttribute('placeholder', 'Title...');
+
+    const descriptionInput = makeElement('textarea', 'description', '.task-form .head-container');
+    descriptionInput.setAttribute('placeholder', 'Add a description (optional).');
+
+    makeElement('div', 'append-container', '.task-form');
+
+    const library = libraryManager().getTasks();
+    const libraryFilter = library.filter(el => el.append === '');
+    for (let task of libraryFilter) {
+        const tile = makeElement('div', 'append-task', '.append-container');
+        tile.setAttribute('data-index', `${task.index}`);
+        const check = makeElement('input', 'to-append', `.append-task[data-index = '${task.index}']`);
+        check.setAttribute('type', 'checkbox');
+        const title = makeElement('div', 'title', `.append-task[data-index = '${task.index}']`);
+        title.textContent = task.title;
+    }
+
+    makeElement('div', 'choice-container', '.task-form');
+
+    const confirmButton = makeElement('div', 'confirm', '.task-form .choice-container');
+    confirmButton.textContent = 'Confirm';
+
+    const cancelButton = makeElement('div', 'cancel', '.task-form .choice-container');
+    cancelButton.textContent = 'Cancel';
+    eventController('project');
+}
+
+function getProject() {
+    const title = document.querySelector('.task-form .head-container input.title').value;
+    const description = document.querySelector('.head-container .description').value;
+    const appends = document.querySelectorAll('.append-task input.to-append');
+
+    const project = { type : 'project', title, description };
+
+    for (let append of appends) {
+        if (append.checked === true) {
+            const parentElement = append.parentElement;
+            const index = parentElement.dataset.index;
+            libraryManager().appendToProject(index, project);
+        }
+    }
+
+    storage().push(project);
+    removeElement('.cover');
+    populateData();
+
+}
+
+function eventController(string) {
+    if (string === 'task') {
+        document.querySelector('.task-form .choice-container .confirm').addEventListener('click', getTask);
+    }
+
+    if (string === 'project') {
+        document.querySelector('.task-form .choice-container .confirm').addEventListener('click', getProject);
+    }
+
+    document.querySelector('.task-form .choice-container .cancel').addEventListener('click', () => {
+        removeElement('.cover');
+    });
 }
 
 export {formManager};

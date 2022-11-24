@@ -3,7 +3,6 @@
 import './style.css';
 import {makeElement} from './modules/make-element';
 import {dummyDisplay} from './modules/dummy';
-import {libraryManager} from './modules/library-manager';
 import { populateData } from './modules/populateData';
 import { formManager } from './modules/forms-manager';
 
@@ -62,7 +61,7 @@ function loadStructure() {
     });
 
 
-    document.querySelector('.important').click(); //why not
+    document.querySelector('.all-tasks').click(); //why not
     //gets tasks container to display important tasks
 }
 

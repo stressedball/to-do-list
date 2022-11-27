@@ -1,6 +1,6 @@
 'use strict';
 
-import { libraryManager, storage } from "./library-manager";
+import {storage } from "./library-manager";
 import { makeElement } from "./make-element";
 import { populateData } from "./populateData";
 import { removeElement } from "./remove-element";
@@ -11,7 +11,7 @@ function clickManager() {
     const editButtons = document.querySelectorAll('.task-tile .task-edit-button');
     const removeButtons = document.querySelectorAll('.task-tile .task-remove');
     const priorityButtons = document.querySelectorAll('.task-tile .priority.button');
-
+    const projectOptions = document.querySelectorAll('.project-tile .options-div .options-logo');
     const projectsElements = document.querySelectorAll('.project-tile');
 
     for (let project of projectsElements) {
@@ -21,19 +21,23 @@ function clickManager() {
         });
     }
 
+    for (let option of projectOptions) {
+        option.addEventListener('click', showOptions);
+    }
+
     for (let expand of expandButtons) {
         expand.addEventListener('click', (e) => {
             const taskIndex = e.target.parentElement.parentElement.dataset.index;
-            const task = storage().getLibrary()[taskIndex];
+            const task = storage().getTask(taskIndex);
             expandTask(task, 'div');
         });
     }
-
+    
     for (let edit of editButtons) {
         edit.addEventListener('click', (e) => {
             const taskIndex = e.target.parentElement.parentElement.dataset.index;
-            const task = storage().getLibrary()[taskIndex];
-            expandTask(task, 'input');
+            const task = storage().getTask(taskIndex);
+            expandTask(task, 'input', taskIndex);
         });
     }
     
@@ -51,7 +55,7 @@ function clickManager() {
     
 }
 
-function expandTask(task, string) {
+function expandTask(task, string, index) {
     const cover = makeElement('div', 'cover', '.main');
 
     const container = makeElement('div', 'expand', '.cover');
@@ -94,7 +98,8 @@ function expandTask(task, string) {
     }
     
     if (string === 'input') {
-        container.setAttribute('data-index', `${task.index}`);
+
+        container.setAttribute('data-index', `${index}`);
 
         title.value = task.title;
         dueDate.value = task.dueDate;
@@ -121,6 +126,47 @@ function expandTask(task, string) {
     
 }
 
+function showOptions(e) {
+    const index = e.target.parentElement.parentElement.dataset.index;
+
+    const hotProject = () => {
+        for (let item of storage().allProjects()) {
+            if (Number(item.i) === Number(index)) {
+                const title = item.value.title;
+                const description = item.value.description;
+                const object = { title, description};
+                return object;
+            }
+        }
+    }
+
+    makeElement('div', 'cover', '.main');
+    makeElement('div', 'expand', '.cover');
+
+    const projectTitle = makeElement('input', 'project-title', '.expand');
+    projectTitle.value = hotProject().title;
+
+    const projectDescription = makeElement('textarea', 'project-description', '.expand');
+    projectDescription.value = hotProject().description;
+
+    // makeElement('div', 'project-link-container', '.task-form');
+    // const addLabel = makeElement('div', 'label', '.project-link-container');
+    // addLabel.setAttribute('for', 'project-title');
+    // addLabel.textContent = 'Link to project';
+    // makeElement('select', 'select', '.project-link-container');
+    // makeElement('option', 'default', '.project-link-container select');
+
+    // const libraryProjects = storage().allProjects();
+    // for (let item of libraryProjects) {
+    //     const project = item.value;
+    //     const option = makeElement('option', 'option', '.project-link-container select');
+    //     option.setAttribute('value', `${project.title}`);
+    //     option.textContent = project.title;
+    // }
+
+
+}
+
 function priorityUpdate(e) {
     let taskIndex = null;
     if (e.target.parentElement.className === 'task-tile') {
@@ -129,15 +175,13 @@ function priorityUpdate(e) {
         taskIndex = document.querySelector('.cover .expand').dataset.index;
     }
 
-    const libraryTask = storage().getLibrary()[taskIndex];
-
     if (e.target.classList.contains('important')) {
         e.target.classList.remove('important');
     } else {
         e.target.classList.add('important');
     }
 
-    libraryManager().updatePriority(taskIndex);
+    storage().updatePriority(taskIndex);
     populateData()
 }
 
@@ -149,7 +193,8 @@ function updateLibrary() {
         priority : document.querySelector('.expand .task-priority img').className,
         dueDate : document.querySelector('.expand .task-due-date input').value
     }
-    libraryManager().updateObject(index, object);
+
+    storage().updateObject(index, object);
     removeElement('.cover');
     populateData();
 }

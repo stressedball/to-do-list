@@ -5,72 +5,7 @@ import {addDays,format,parse,parseISO,
 import { populateData } from './populateData';
 
 
-function libraryManager() {
-
-    const appendToProject = (index, project) => {
-        const task = storage().getLibrary()[index];
-        task.append = project.title;
-        localStorage.setItem(`${index}`, JSON.stringify(task));
-    }
-    
-    const filterProjects = (index) => {
-        const projectName = storage().getLibrary()[index].title;
-        const allTasks = storage().getLibrary().filter(el => el.type === 'task');
-        const filter = allTasks.filter(el => el.append === `${projectName}`);
-        return filter;
-    }
-
-
-
-
-
-    const getTasks = () => {
-        const filter = storage().getLibrary().filter(el => el.type === 'task');
-        return filter;
-    }
-
-    const updatePriority = (index) => {
-        const task = storage().getLibrary()[index];
-        if (task.priority === 'important') {
-            task.priority = '';
-        } else {
-            task.priority = 'important';
-        }
-        localStorage.setItem(`${index}`, JSON.stringify(task));
-    }
-
-    const updateObject = (index, object) => {
-        const task = storage().getLibrary()[index];
-        task.title = object.title;
-        task.description = object.description;
-        task.dueDate = object.dueDate;
-        const priority = object.priority;
-        const prioritySplit = priority.split(' ');
-        for (let split of prioritySplit) {
-            if (split === 'important') {
-                task.priority = 'important';
-            } else {
-                task.priority = '';
-            }
-        }
-        localStorage.setItem(`${index}`, JSON.stringify(task));
-    }
-
-
-    return { appendToProject, filterProjects, getTasks, updateObject, updatePriority };
-}
-
-const storage = () => {
-
-    const getLibrary = () => {
-        const library = [];
-        for (let i = 0; i < localStorage.length; i++) {
-            const value = JSON.parse(localStorage[i])
-            const object = { i , value}
-            library.push(object);
-        }
-        return library;
-    }
+function storage() {
             
     const allTasks = () => {
         const library = [];
@@ -80,6 +15,53 @@ const storage = () => {
                 const object = {i, value};
                 library.push(object);
             }
+        }
+        return library;
+    }
+
+    const allProjects = () => {
+        const library = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const value = JSON.parse(localStorage[i]); 
+            if (value.type === 'project') {
+                const object = { i , value}
+                library.push(object);
+            }     
+        }
+        return library;
+    }
+
+    const appendToProject = (indexes, projectTitle) => {
+        const hotProject = () => {
+            for (let i = 0; i < localStorage.length; i++) {
+                const value = JSON.parse(localStorage[i]); 
+                if (value.type === 'project') {
+                    if (value.title === projectTitle) {
+                        return value.title;
+                    }
+                }     
+            }
+        }
+
+        for (let index of indexes) {
+            const task = JSON.parse(localStorage.getItem(`${index}`));
+            task.append = hotProject();
+            localStorage.setItem(`${index}`, JSON.stringify(task));
+        }
+    }
+
+    const displayProjectTasks = (index) => {
+        const library = [];
+        const project = localStorage.getItem(`${index}`);
+
+        const projectName = JSON.parse(project).title;
+        // const projectName = project.value.name
+        for (let i = 0; i < localStorage.length; i++) {
+            const value = JSON.parse(localStorage[i]); 
+            if (value.append === projectName) {
+                const object = { i , value}
+                library.push(object);
+            }     
         }
         return library;
     }
@@ -98,7 +80,7 @@ const storage = () => {
 
     const filterWeek = () => {
 
-        let library = [];
+        const library = [];
 
         const today = format(new Date(), 'yyyy-MM-dd');
         const todaySplit = today.split('-');
@@ -127,24 +109,44 @@ const storage = () => {
         return library;
     }
 
-    const getProjects = () => {
-        const library = [];
-        for (let i = 0; i < localStorage.length; i++) {
-            const value = JSON.parse(localStorage[i]); 
-            if (value.type === 'project') {
-                const object = { i , value}
-                library.push(object);
-            }     
-        }
-        return library;
+    const getTask = (index) => {
+        const task = localStorage.getItem(`${index}`);
+        return JSON.parse(task);
     }
-    
 
     const push = (object) => {
         localStorage.setItem(`${localStorage.length}`, JSON.stringify(object));
         return;
     }
 
+    const updatePriority = (index) => {
+        
+        const task = localStorage.getItem(`${index}`);
+        const parseTask = JSON.parse(task);
+        console.log(parseTask)
+        let priority = parseTask.priority;
+        if (priority === 'important') {
+            parseTask.priority = '';
+        } else {
+            parseTask.priority = 'important';
+        }
+        localStorage.setItem(`${index}`, JSON.stringify(parseTask)); 
+    }
+
+    const updateObject = (index, object) => {
+        const localTask = JSON.parse(localStorage.getItem(`${index}`));
+        localTask.title = object.title;
+        if (object.priority.split(' ').length > 1) {
+            localTask.priority = 'important';
+        } else {
+            localTask.priority = '';
+        }
+        // localTask.priority = object.priority;
+        localTask.dueDate = object.dueDate;
+        localTask.description = object.description;
+        // localTask.append = object.append;
+        localStorage.setItem(`${index}`, JSON.stringify(localTask));
+    }
 
     const remove = (index) => {
         localStorage.removeItem(`${Number(index)}`);
@@ -159,7 +161,8 @@ const storage = () => {
         populateData();
     }
 
-    return {allTasks, filterWeek, filterImportant, getLibrary, getProjects, remove, push};
+    return {allTasks, allProjects, appendToProject, filterWeek, filterImportant, displayProjectTasks, getTask, push,
+        remove, updatePriority, updateObject};
     
 }
 
@@ -167,4 +170,4 @@ const storage = () => {
 
 
 
-export {libraryManager, storage};
+export {storage};

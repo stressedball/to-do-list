@@ -184,6 +184,9 @@ input.title {
 
 .projects-container .project-tile {
     margin-left: 20px;
+    display: flex;
+    gap: 15px;
+    justify-content: space-between;
 }
 
 .projects-container .project-tile:hover {

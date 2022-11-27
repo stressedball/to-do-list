@@ -2,7 +2,7 @@
 
 import { makeElement } from "./make-element";
 import { removeElement } from "./remove-element";
-import {libraryManager, storage} from './library-manager';
+import { storage} from './library-manager';
 import { populateData } from "./populateData";
 
 function formManager() { 
@@ -57,8 +57,9 @@ function taskForm() {
     makeElement('select', 'select', '.project-link-container');
     makeElement('option', 'default', '.project-link-container select');
 
-    const libraryProjects = storage().getProjects();
-    for (let project of libraryProjects) {
+    const libraryProjects = storage().allProjects();
+    for (let item of libraryProjects) {
+        const project = item.value;
         const option = makeElement('option', 'option', '.project-link-container select');
         option.setAttribute('value', `${project.title}`);
         option.textContent = project.title;
@@ -110,14 +111,15 @@ function projectForm() {
 
     makeElement('div', 'append-container', '.task-form');
 
-    const library = libraryManager().getTasks();
-    const libraryFilter = library.filter(el => el.append === '');
-    for (let task of libraryFilter) {
+    const library = storage().allTasks();
+    for (let item of library) {
+        const index = item.i;
+        const task = item.value;
         const tile = makeElement('div', 'append-task', '.append-container');
-        tile.setAttribute('data-index', `${task.index}`);
-        const check = makeElement('input', 'to-append', `.append-task[data-index = '${task.index}']`);
+        tile.setAttribute('data-index', `${index}`);
+        const check = makeElement('input', 'to-append', `.append-task[data-index = '${index}']`);
         check.setAttribute('type', 'checkbox');
-        const title = makeElement('div', 'title', `.append-task[data-index = '${task.index}']`);
+        const title = makeElement('div', 'title', `.append-task[data-index = '${index}']`);
         title.textContent = task.title;
     }
 
@@ -131,22 +133,24 @@ function projectForm() {
     eventController('project');
 }
 
-function getProject() {
+function displayProjectTasks() {
     const title = document.querySelector('.task-form .head-container input.title').value;
     const description = document.querySelector('.head-container .description').value;
     const appends = document.querySelectorAll('.append-task input.to-append');
 
     const project = { type : 'project', title, description };
 
+    let library = [];
     for (let append of appends) {
         if (append.checked === true) {
             const parentElement = append.parentElement;
             const index = parentElement.dataset.index;
-            libraryManager().appendToProject(index, project);
+            library.push(index);
         }
     }
 
     storage().push(project);
+    storage().appendToProject(library, project.title);
     removeElement('.cover');
     populateData();
 
@@ -158,12 +162,12 @@ function eventController(string) {
     }
 
     if (string === 'project') {
-        document.querySelector('.task-form .choice-container .confirm').addEventListener('click', getProject);
+        document.querySelector('.task-form .choice-container .confirm').addEventListener('click', displayProjectTasks);
     }
 
     document.querySelector('.task-form .choice-container .cancel').addEventListener('click', () => {
         removeElement('.cover');
     });
 }
-
+ 
 export {formManager};

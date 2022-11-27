@@ -1,7 +1,7 @@
 'use strict';
 
 import { clickManager } from './click-manager';
-import { libraryManager, storage } from './library-manager';
+import { storage } from './library-manager';
 import { makeElement } from './make-element';
 import {removeElement} from './remove-element';
 
@@ -26,7 +26,6 @@ function populateData() {
 function populateTasks(library) {
 
     for (let element of library) {
-        console.log(element)
         const index = element.i;
         const object = element.value;
         const taskTileAdress = `.task-tile[data-index = "${index}"]`;
@@ -64,13 +63,16 @@ function populateTasks(library) {
 }
 
 function populateProjects() {
-    const projects = storage().getProjects();
+    const projects = storage().allProjects();
     for (let element of projects) {
         const index = element.i;
         const project = element.value;
         const projectElement = makeElement('div', 'project-tile', '.projects-container');
         projectElement.setAttribute('data-index', `${index}`);
         projectElement.textContent = project.title;
+        const projectOptions = makeElement('div', 'options-div', `.project-tile[data-index = "${index}"]`);
+        const settings = makeElement('img', 'options-logo', `.project-tile[data-index = "${index}"] .options-div`);
+        settings.setAttribute('src', '/src/assets/icons/settings-svgrepo-com.svg');
     }
 }
 
@@ -94,8 +96,7 @@ function getHandle() {
     } else {
         const handleSplit = handle.split(' ');
         const index = handleSplit[1];
-        const ring = JSON.parse(localStorage.getItem(`${index}`));
-        // local = libraryManager().filterProjects(index);
+        local = storage().displayProjectTasks(index);
         return local;
     }
 }

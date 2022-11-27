@@ -42,7 +42,7 @@ function populateTasks(library) {
         //PRIORITY MANAGEMENT
         const taskPriority = makeElement('img', 'priority', taskTileAdress);
         taskPriority.classList.add('button');
-        taskPriority.setAttribute('src', '/src/assets/icons/priority-svgrepo-com.svg');
+        taskPriority.setAttribute('src', './assets/icons/priority-svgrepo-com.svg');
         if (object.priority === 'important') {
             taskPriority.classList.add('important');
         }
@@ -52,13 +52,13 @@ function populateTasks(library) {
     
         const taskOptions = makeElement('div', 'task-options', taskTileAdress);
         const taskExpand = makeElement('img', 'expand-button', taskTileAdress + ' .task-options');
-        taskExpand.setAttribute('src', '/src/assets/icons/expand-svgrepo-com.svg');
+        taskExpand.setAttribute('src', './assets/icons/expand-svgrepo-com.svg');
         
         const taskEdit = makeElement('img', 'task-edit-button', taskTileAdress + ' .task-options');
-        taskEdit.setAttribute('src', '/src/assets/icons/edit-svgrepo-com.svg');
+        taskEdit.setAttribute('src', './assets/icons/edit-svgrepo-com.svg');
 
         const taskDel = makeElement('img', 'task-remove', taskTileAdress + ' .task-options');
-        taskDel.setAttribute('src', '/src/assets/icons/remove-svgrepo-com.svg');
+        taskDel.setAttribute('src', './assets/icons/remove-svgrepo-com.svg');
     }
 }
 
@@ -72,7 +72,7 @@ function populateProjects() {
         projectElement.textContent = project.title;
         const projectOptions = makeElement('div', 'options-div', `.project-tile[data-index = "${index}"]`);
         const settings = makeElement('img', 'options-logo', `.project-tile[data-index = "${index}"] .options-div`);
-        settings.setAttribute('src', '/src/assets/icons/settings-svgrepo-com.svg');
+        settings.setAttribute('src', './assets/icons/settings-svgrepo-com.svg');
     }
 }
 

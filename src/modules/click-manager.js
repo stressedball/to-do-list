@@ -71,7 +71,7 @@ function expandTask(task, string, index) {
     
     const priorityDiv = makeElement('div', 'task-priority', '.expand');
     const priorityLogo = makeElement('img', 'priority', '.task-priority');
-    priorityLogo.setAttribute('src', '/src/assets/icons/priority-svgrepo-com.svg');
+    priorityLogo.setAttribute('src', './assets/icons/priority-svgrepo-com.svg');
     if (task.priority === 'important') {
         priorityLogo.classList.add('important');
     }

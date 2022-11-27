@@ -34,7 +34,7 @@ function taskForm() {
     const priorityLabel = makeElement('div', 'label', '.task-form .priority-container');
     priorityLabel.textContent = 'Set as important';
     const priority = makeElement('img', 'priority', '.task-form .priority-container');
-    priority.setAttribute('src', '/src/assets/icons/priority-svgrepo-com.svg');
+    priority.setAttribute('src', './assets/icons/priority-svgrepo-com.svg');
     priority.addEventListener('click', (e) => {
         if (e.target.classList.contains('important')) {
             e.target.classList.remove('important');
